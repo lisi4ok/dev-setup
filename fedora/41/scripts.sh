@@ -1,5 +1,53 @@
 #!/bin/bash
 
+
+# get_latest_github_version() {
+#   if [[ -n ${1} && -n ${2} ]]; then
+#     local VERSION=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/${1}/${2}/releases/latest)
+#     echo ${VERSION##*/}
+#   fi
+# }
+# get_latest_release_github() {
+#   curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+#     grep '"tag_name":' |                                            # Get tag line
+#     sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+# }
+latest_release() { git ls-remote --tags "$1" | cut -d/ -f3- | tail -n1; }
+
+
+install_phalcon() {
+  # local PHALCON_VERSION=$(latest_release https://github.com/phalcon/cphalcon)
+  # local PHP_VERSION=$(php -v | head -n 1 | cut -d " " -f 2 | cut -f1-2 -d".")
+  # local FOLDER="php-${PHALCON_VERSION}-phalcon-${PHP_VERSION}"
+  # if [[ -d ./tmp ]]; then
+  #   sudo rm -rf ./tmp
+  # fi
+  # git clone --depth 1 --branch ${PHALCON_VERSION} https://github.com/phalcon/cphalcon ./tmp
+
+  # ////
+  # sudo cp -f ./phalcon/phalcon.so /usr/lib64/php/modules/
+  # sudo chmod 755 /usr/lib64/php/modules/phalcon.so
+  # sudo chown root:root /usr/lib64/php/modules/phalcon.so
+
+  # sudo cp -f ./phalcon/50-phalcon.ini /etc/php.d/
+  # sudo chmod 644 /etc/php.d/50-phalcon.ini
+  # sudo chown root:root /etc/php.d/50-phalcon.ini
+  # ////
+
+  # cd phalcon
+  # find . -type d -exec chmod -R 755 {} \;
+  # find . -type f -name "*.ini" -exec chmod -R 644 {} \;
+  # find . -type f -name "*.so" -exec chmod -R 755 {} \;
+  # sudo chown -R root:root .
+  # sudo tar -czvf phalcon.tar.gz .
+  # cd ..
+  # sudo chown -R user:user phalcon
+
+
+  sudo tar -xf phalcon.tar.gz -C /
+
+}
+
 add_aliases() {
   if ! grep -wq ". ~/.bash_aliases" ~/.bashrc; then
     tee -a ~/.bashrc > /dev/null <<EOT
@@ -111,19 +159,24 @@ php_install() {
     php-soap \
     php-sodium \
     php-tidy \
-    php-xml
+    php-xml \
+    php-mongodb
 
     if [[ ! -x "$(command -v composer)"  ]]; then
         sudo dnf install -y composer
     fi
 
-    if [[ ! -x "$(command -v pecl)"  ]]; then
-        sudo dnf install -y php-pear
-        sudo pecl install -y \
-        psr \
-        mongodb \
-        phalcon
-    fi
+    install_phalcon
+
+    # if [[ ! -x "$(command -v pecl)"  ]]; then
+    #     sudo dnf install -y php-pear
+    #     sudo chown $(whoami) $(pecl config-get php_dir)
+    #     pecl channel-update pecl.php.net
+    #     sudo pecl install -y \
+    #     psr \
+    #     mongodb \
+    #     phalcon
+    # fi
 
   fi
 }
@@ -195,6 +248,7 @@ check_os() {
 # BEGIN
 if [[ -z ${1} ]]; then
   display_help
+  exit 1
 fi
 
 check_os
