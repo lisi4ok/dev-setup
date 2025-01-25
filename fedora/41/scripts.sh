@@ -6,12 +6,39 @@ templates_install() {
 }
 
 gitconfig_install() {
+
+
+GIT_EMAIL=''
+while true
+do
+    read -p "Enter GIT Email: " email
+    echo
+    if [[ "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]];then
+      GIT_EMAIL=${email}
+      break
+    else
+      echo "Email address ${email} is invalid."
+    fi
+done
+
+GIT_NAME=''
+while true
+do
+    read -p "Enter GIT Name: " name
+    echo
+    if [[ "$name" =~ ^[A-Za-z']{2,} +[A-Za-z']{2,}$ ]];then
+      GIT_NAME=${name}
+      break
+    else
+      echo "Name ${name} is invalid."
+    fi
+done
+
   rm -rf ~/.gitconfig
   tee -a ~/.gitconfig > /dev/null <<EOT
 [user]
-  name  = Zaio Klepoyshkov
-  email = master@lisi4ok.com
-  #email = lisi4ok@gmail.com
+  name  = ${GIT_NAME}
+  email = ${GIT_EMAIL}
 [core]
   editor   = vim
   autocrlf = input
@@ -45,12 +72,6 @@ gitconfig_install() {
   pb  = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
 EOT
 }
-
-
-
-gitconfig_install
-
-exit
 
 rpm_install() {
   wget -qO- ${1} | unzip | tar xvf - -C ./
