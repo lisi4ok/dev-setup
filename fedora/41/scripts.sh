@@ -1,12 +1,10 @@
 #!/bin/bash
 
-
 templates_install() {
   sudo cp -rf ./Templates ~/
 }
 
 gitconfig_install() {
-
 
 GIT_EMAIL=''
 while true
@@ -35,7 +33,7 @@ do
 done
 
   rm -rf ~/.gitconfig
-  tee -a ~/.gitconfig > /dev/null <<EOT
+  tee -a ~/.gitconfig > /dev/null <<EOF
 [user]
   name  = ${GIT_NAME}
   email = ${GIT_EMAIL}
@@ -70,7 +68,7 @@ done
   sup = !git submodule update
   grp = log --all --decorate --oneline --graph
   pb  = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
-EOT
+EOF
 }
 
 rpm_install() {
@@ -133,16 +131,17 @@ phalcon_install() {
 
 add_aliases() {
   if ! grep -wq ". ~/.bash_aliases" ~/.bashrc; then
-    tee -a ~/.bashrc > /dev/null <<EOT
+    tee -a ~/.bashrc > /dev/null <<EOF
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-EOT
+EOF
 
   fi
-  cp -f ./.bash_aliases ~/
+
+  cp -rf ./.bash_aliases ~/
 }
 
 core_install() {
@@ -336,12 +335,12 @@ js_install() {
       git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
     ) && \. "$NVM_DIR/nvm.sh"
 
-    tee -a ~/.bashrc > /dev/null <<EOT
+    tee -a ~/.bashrc > /dev/null <<EOF
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-EOT
+EOF
     exec $SHELL -l
 
     echo "----- NVM INSTALLED -----"
