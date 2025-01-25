@@ -7,7 +7,8 @@ check_os() {
     echo "Invalid OS"
     exit 1
   fi
-  bash "./${DISTRIBUTION}/${VERSION}/scripts.sh" $#
+
+  bash ./${DISTRIBUTION}/${VERSION}/scripts.sh ${*}
 }
 
-check_os
+check_os ${*}
