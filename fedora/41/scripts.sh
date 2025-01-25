@@ -73,8 +73,8 @@ EOF
 
 sublime_install() {
   sudo rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
-  wget -qO- https://download.sublimetext.com/sublime-text-3211-1.x86_64.rpm | unzip | tar xvf - -C ./
-  sudo dnf install ./sublime-text-3211-1.x86_64.rpm
+  curl -O https://download.sublimetext.com/sublime-text-3211-1.x86_64.rpm
+  sudo dnf install -y ./sublime-text-3211-1.x86_64.rpm
   echo "----- SUBLIME INSTALLED -----"
 }
 
