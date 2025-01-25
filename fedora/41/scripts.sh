@@ -2,7 +2,11 @@
 
 
 templates_install() {
-  cp -R ./Templates ~/
+  cp -rf ./Templates ~/
+}
+
+gitconfig_install() {
+  cp -rf ./.gitconfig ~/
 }
 
 
@@ -318,6 +322,7 @@ all_install() {
 }
 
 dev_install() {
+  gitconfig_install
   add_aliases
   templates_install
 
@@ -343,7 +348,7 @@ display_help() {
     echo "   -e, -E, --edge          Install Edge Browser"
     echo "   -f, -F, --apps          Install Apps"
     echo "   -j, -j, --js            Install js dev"
-
+    echo "   -g, -G, --gitconfig     Install gitconfig"
     echo "   -i, -I, --aliases       Install bash aliases"
     echo "   -h, -H, --help          Help Display"
 
@@ -377,6 +382,7 @@ while [[ ${#} -gt 0 ]]; do
         -a|-A|--all) dev_install; shift ;;
         -i|-I|--aliases) add_aliases; shift ;;
         -t|-T|--templates) templates_install; shift ;;
+        -g|-G|--gitconfig) gitconfig_install; shift ;;
         -b|-B|--core) core_install; shift ;;
         -c|-C|--c) c_install; shift ;;
         -r|-R|--ruby) ruby_install; shift ;;
