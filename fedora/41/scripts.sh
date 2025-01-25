@@ -71,15 +71,10 @@ done
 EOF
 }
 
-rpm_install() {
-  wget -qO- ${1} | unzip | tar xvf - -C ./
-  local file=$(basename ${1})
-  sudo dnf install ${file}
-}
-
 sublime_install() {
   sudo rpm --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
-  rpm_install https://download.sublimetext.com/sublime-text-3211-1.x86_64.rpm
+  wget -qO- https://download.sublimetext.com/sublime-text-3211-1.x86_64.rpm | unzip | tar xvf - -C ./
+  sudo dnf install ./sublime-text-3211-1.x86_64.rpm
 }
 
 # get_latest_github_version() {
