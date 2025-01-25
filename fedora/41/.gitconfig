@@ -2,10 +2,6 @@
   name  = Zaio Klepoyshkov
   email = master@lisi4ok.com
   #email = lisi4ok@gmail.com
-  #email = nikola.haralamov@gmail.com
-  #email = nikola.haralamov@latamgateway.com
-  #email = nikola.haralamov@elando.com
-  #name  = Nikola Haralamov
 [core]
   editor   = vim
   autocrlf = input
