@@ -2,13 +2,55 @@
 
 
 templates_install() {
-  cp -rf ./Templates ~/
+  sudo cp -rf ./Templates ~/
 }
 
 gitconfig_install() {
-  cp -rf ./.gitconfig ~/
+  rm -rf ~/.gitconfig
+  tee -a ~/.gitconfig > /dev/null <<EOT
+[user]
+  name  = Zaio Klepoyshkov
+  email = master@lisi4ok.com
+  #email = lisi4ok@gmail.com
+[core]
+  editor   = vim
+  autocrlf = input
+  pager    = delta
+[pull]
+  ff = only
+[push]
+  default = simple
+[alias]
+  s   = status
+  a   = add
+  aa  = add --all
+  c   = commit
+  cm  = commit -m
+  cam = commit -am
+  cp  = cherry-pick
+  ch  = checkout
+  ca  = checkout -- .
+  b   = branch --all
+  pl  = pull
+  plo = pull origin
+  ps  = push
+  pso = push origin
+  m   = merge --no-ff
+  rb  = rebase
+  d   = diff
+  f   = fetch
+  rh  = reset HEAD
+  sup = !git submodule update
+  grp = log --all --decorate --oneline --graph
+  pb  = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
+EOT
 }
 
+
+
+gitconfig_install
+
+exit
 
 rpm_install() {
   wget -qO- ${1} | unzip | tar xvf - -C ./
