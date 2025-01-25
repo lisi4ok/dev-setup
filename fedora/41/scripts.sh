@@ -123,11 +123,20 @@ ruby_install() {
     local ruby_version=$(rbenv install -l | sed -n '/^[[:space:]]*[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}[[:space:]]*$/ h;${g;p;}')
     rbenv install ${ruby_version}
   fi
+
+  echo "----- RUBY INSTALLED -----"
+  ruby -v
+  echo "----- RUBY INSTALLED -----"
+
 }
 
 php_install() {
   if [[ ! -x "$(command -v sqlite3)"  ]]; then
     sudo dnf install -y sqlite
+
+  echo "----- SQLITE INSTALLED -----"
+  sqlite3 --version
+  echo "----- SQLITE INSTALLED -----"
   fi
 
   if [[ ! -x "$(command -v php)"  ]]; then
@@ -162,21 +171,52 @@ php_install() {
     php-xml \
     php-mongodb
 
+  echo "----- PHP INSTALLED -----"
+  php -v
+  echo "----- PHP INSTALLED -----"
+
     if [[ ! -x "$(command -v composer)"  ]]; then
         sudo dnf install -y composer
+
+        echo "----- COMPOSER INSTALLED -----"
+        composer -v
+        echo "----- COMPOSER INSTALLED -----"
     fi
 
-    install_phalcon
+    if [[ ! -x "$(command -v pecl)"  ]]; then
+        sudo dnf install -y php-pear
+        sudo chown $(whoami) $(pecl config-get php_dir)
+        pecl channel-update pecl.php.net
+        sudo pecl install \
+        psr \
+        mongodb \
+        phalcon
 
-    # if [[ ! -x "$(command -v pecl)"  ]]; then
-    #     sudo dnf install -y php-pear
-    #     sudo chown $(whoami) $(pecl config-get php_dir)
-    #     pecl channel-update pecl.php.net
-    #     sudo pecl install -y \
-    #     psr \
-    #     mongodb \
-    #     phalcon
-    # fi
+
+
+      local PSR=$(php -m | grep psr)
+      local MONGODB=$(php -m | grep mongodb)
+      local PHALCON=$(php -m | grep phalcon)
+      if [[ -n PSR ]]; then
+        echo "----- php psr INSTALLED -----"
+      else
+        echo "----- php psr NOT INSTALLED -----"
+      fi
+
+      if [[ -n MONGODB ]]; then
+        echo "----- php mongodb INSTALLED -----"
+      else
+        echo "----- php mongodb NOT INSTALLED -----"
+      fi
+
+      if [[ -n PHALCON ]]; then
+        echo "----- php phalcon INSTALLED -----"
+      else
+        echo "----- php phalcon NOT INSTALLED -----"
+      fi
+    fi
+
+    #install_phalcon
 
   fi
 }
@@ -185,9 +225,17 @@ js_install() {
   # Install Bun/Deno
   if [[ ! -x "$(command -v bun)"  ]]; then
     curl -fsSL https://bun.sh/install | bash
+
+    echo "----- NPM INSTALLED -----"
+    bun -v
+    echo "----- NPM INSTALLED -----"
   fi
   if [[ ! -x "$(command -v deno)"  ]]; then
     curl -fsSL https://deno.land/install.sh | sh
+
+    echo "----- NPM INSTALLED -----"
+    deno -v
+    echo "----- NPM INSTALLED -----"
   fi
 
   # Install NVM
@@ -208,7 +256,22 @@ EOT
   fi
   if [[ ! -x "$(command -v npm)"  ]]; then
     nvm install --latest-npm
+
+    echo "----- NPM INSTALLED -----"
+    npm -v
+    echo "----- NPM INSTALLED -----"
   fi
+}
+
+install_edge() {
+  sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+  sudo dnf config-manager --add-repo https://packages.microsoft.com/yumrepos/edge
+  sudo dnf update --refresh
+  sudo dnf install microsoft-edge-stable
+
+  echo "----- MICROSOFT EDGE INSTALLED -----"
+  microsoft-edge -version
+  echo "----- MICROSOFT EDGE INSTALLED -----"
 }
 
 dev_install() {
@@ -218,6 +281,8 @@ dev_install() {
   ruby_install
   php_install
   js_install
+
+  install_edge
 
   exit 1
 }
