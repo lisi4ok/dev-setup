@@ -317,10 +317,6 @@ edge_install() {
   echo "----- END -----"
 }
 
-all_install() {
-
-}
-
 dev_install() {
   gitconfig_install
   add_aliases
