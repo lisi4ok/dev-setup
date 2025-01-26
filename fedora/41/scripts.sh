@@ -270,8 +270,7 @@ php_install() {
 
     if [[ ! -x "$(command -v pecl)"  ]]; then
         sudo dnf install -y php-pear
-        sudo chown $(whoami) $(pecl config-get php_dir)
-        pecl channel-update pecl.php.net
+        sudo pecl channel-update pecl.php.net
         sudo pecl install \
         psr \
         mongodb \
